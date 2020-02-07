@@ -1,35 +1,55 @@
-import React, { Component } from 'react';
-import './Home.scss';
-import Button from '../../component/Button';
-import ButtonValue from '../../constant/ButtonValue';
-import Display from './Display';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import "./Home.scss";
+import Keyboard from "../../component/Keyboard";
+import Screen from "../../component/Screen";
+import {
+  calculate,
+  deleteLastEntry,
+  evaluateExpression
+} from "../../redux/actions/calculate";
+import * as fromCalculator from "../../redux";
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
-  }
-
-  bottonCheck = evt => {
-    console.log(evt);
+    this.state = {};
   }
 
   render() {
     return (
       <div className="calculator">
-        <div className="calculator-header">
-          <Display className="display-operation" value="200" />
-          <Display className="display-screen" value="100" />
-        </div>
+        <Screen {...this.props} />
         <div className="button-grp">
-          {ButtonValue.map((el, index) => {
-            const { label } = el;
-            return <Button key={index} className="button" label={label} onClick={() => this.bottonCheck(el)} />
-          })}
+          <Keyboard {...this.props} />
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Home;
+const mapStateToProps = state => {
+  return {
+    expression: fromCalculator.getExpression(state),
+    total: fromCalculator.getTotal(state)
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    calculate: value => {
+      dispatch(calculate(value));
+    },
+    delete: () => {
+      dispatch(deleteLastEntry());
+    },
+    evaluate: () => {
+      dispatch(evaluateExpression());
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

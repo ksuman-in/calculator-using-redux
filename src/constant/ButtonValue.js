@@ -1,117 +1,79 @@
 const ButtonValue = [
   {
-    key: 'Delete',
-    label: 'C',
-    type: 'command',
-    command: 'clearAction'
+    key: "Delete",
+    label: "C"
   },
   {
-    key: '+/-',
-    label: '\u00B1',
-    type: 'command',
-    command: 'switchOperatorAction'
+    key: "+/-",
+    label: "+/-"
   },
   {
-    key: '%',
-    label: '%',
-    type: 'percent',
-    command: 'percentAction'
+    key: "%",
+    label: "%"
   },
   {
-    key: '/',
-    label: '\u00F7',
-    type: 'operator',
-    command: 'operatorAction'
+    key: "/",
+    label: "\u00F7"
   },
   {
-    key: '7',
-    label: '7',
-    type: 'number',
-    command: 'addAction'
+    key: "7",
+    label: "7"
   },
   {
-    key: '8',
-    label: '8',
-    type: 'number',
-    command: 'addAction'
+    key: "8",
+    label: "8"
   },
   {
-    key: '9',
-    label: '9',
-    type: 'number',
-    command: 'addAction'
+    key: "9",
+    label: "9"
   },
   {
-    key: '*',
-    label: '\u00D7',
-    type: 'operator',
-    command: 'operatorAction'
+    key: "*",
+    label: "\u00D7"
   },
   {
-    key: '4',
-    label: '4',
-    type: 'number',
-    command: 'addAction'
+    key: "4",
+    label: "4"
   },
   {
-    key: '5',
-    label: '5',
-    type: 'number',
-    command: 'addAction'
+    key: "5",
+    label: "5"
   },
   {
-    key: '6',
-    label: '6',
-    type: 'number',
-    command: 'addAction'
+    key: "6",
+    label: "6"
   },
   {
-    key: '-',
-    label: '\u2212',
-    type: 'operator',
-    command: 'operatorAction'
+    key: "-",
+    label: "\u2212"
   },
   {
-    key: '1',
-    label: '1',
-    type: 'number',
-    command: 'addAction'
+    key: "1",
+    label: "1"
   },
   {
-    key: '2',
-    label: '2',
-    type: 'number',
-    command: 'addAction'
+    key: "2",
+    label: "2"
   },
   {
-    key: '3',
-    label: '3',
-    type: 'number',
-    command: 'addAction'
+    key: "3",
+    label: "3"
   },
   {
-    key: '+',
-    label: '+',
-    type: 'operator',
-    command: 'operatorAction'
+    key: "+",
+    label: "+"
   },
   {
-    key: '0',
-    label: '0',
-    type: 'number',
-    command: 'addAction'
+    key: "0",
+    label: "0"
   },
   {
-    key: '.',
-    label: '.',
-    type: 'point',
-    command: 'pointAction'
+    key: ".",
+    label: "."
   },
   {
-    key: 'Enter',
-    label: '=',
-    type: 'result',
-    command: 'resultAction'
+    key: "Enter",
+    label: "="
   }
 ];
 
