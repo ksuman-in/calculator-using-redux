@@ -1,63 +1,114 @@
+/* eslint-disable no-new-func */
 import * as actionTypes from "../actionTypes";
-import calculate from "./calculate";
 
 let initialState = {
   expression: "",
-  total: 0
+  total: 0,
+  value: "",
+  switchSymbol: "-"
 };
 
-const getResult = (state, action) => {
-  const { payload } = action;
-  const { expression, total } = state;
-  let expressionTemp = expression + payload;
-  const matched = new RegExp(
-    "([\\d]+\\.?[\\d]*)?([-+/*][\\d]+\\.?[\\d]*)*"
-  ).exec(expressionTemp);
-  if (!matched) {
+const getValue = exp => {
+  const regexp = new RegExp("([\\d]+\\.?[\\d]*)?([-+/*%][\\d]+\\.?[\\d]*)*");
+  const match = regexp.exec(exp);
+  return match;
+};
+
+const numberFormat = num => {
+  const decimal = num.toFixed(2);
+  if (Number.isInteger(num))
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  else return decimal.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+};
+
+const checkExpression = exp => {
+  let matchChar = getValue(exp).input;
+  const regex = new RegExp(/[^0-9]$/, "gm");
+  const isMatch = regex.test(matchChar);
+  if (isMatch) {
+    matchChar = matchChar.substring(0, matchChar.length - 1);
+  }
+  return matchChar;
+};
+
+const calculateValue = expression => {
+  const tempMatch = getValue(expression);
+  if (!tempMatch) {
     return 0;
   }
-
-  const t = `${matched[0]}`;
-  console.log(t);
-  return { ...state, expression: expression, total: t };
+  return new Function(`return ${tempMatch[0]}`)();
 };
 
-const deleteLastElement = (state, action) => {
-  console.log(action);
-  return { ...state };
+const evaluateOperation = (state, action) => {
+  const { payload } = action;
+  const { expression, total } = state;
+  let expTemp = expression + payload;
+  let tempTotal = total;
+  const tempMatch = getValue(expTemp);
+  if (tempMatch[0].length === 0) {
+    expTemp = "";
+    tempTotal = 0;
+  } else {
+    expTemp = expression + payload;
+    let value = calculateValue(expTemp);
+    tempTotal = numberFormat(value);
+    if (tempTotal.toString().length > 16) {
+      tempTotal = 0;
+      expTemp = "";
+    }
+  }
+
+  return { ...state, expression: expTemp, total: tempTotal, switchSymbol: "-" };
 };
 
-const evaluateResult = (state, action) => {
-  console.log(action);
-  return { ...state };
+const switchOperation = (state, action) => {
+  const { switchType } = action;
+  const { expression, switchSymbol } = state;
+  let ssymbol = switchSymbol;
+  let expTemp = checkExpression(expression);
+  const stype = switchType.split("/")[0];
+  if (expTemp.length) {
+    if (stype === ssymbol) {
+      ssymbol = "-";
+      expTemp += ssymbol;
+    } else {
+      ssymbol = "+";
+      expTemp += ssymbol;
+    }
+  } else ssymbol = expTemp + "";
+  return { ...state, switchSymbol: ssymbol, expression: expTemp };
+};
+
+const deleteLastElement = state => {
+  const { expression, total } = state;
+  let expTemp = expression;
+  let tempTotal = total;
+  expTemp = expTemp
+    .split("")
+    .slice(0, expTemp.length - 1)
+    .join("");
+  let value = calculateValue(expTemp);
+  tempTotal = value ? numberFormat(value) : 0;
+  return { ...state, expression: expTemp, total: tempTotal };
+};
+
+const evaluateResult = state => {
+  const { expression, total } = state;
+  let tempTotal = total;
+  tempTotal = calculateValue(expression) || expression || total;
+  return { ...state, expression: "", total: tempTotal };
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.OPERATION:
-      let expression = state.expression + action.payload;
-      return {
-        ...state,
-        expression,
-        total: calculate(expression)
-      };
+      return evaluateOperation(state, action);
     case actionTypes.DELETE_LAST:
-      let exp = state.expression;
-      exp = exp
-        .split("")
-        .slice(0, exp.length - 1)
-        .join("");
-      return {
-        ...state,
-        expression: exp,
-        total: calculate(exp)
-      };
+      return deleteLastElement(state);
     case actionTypes.EVALUATE:
-      return {
-        ...state,
-        expression: "",
-        total: calculate(state.expression) || state.expression || state.total
-      };
+      return evaluateResult(state);
+    case actionTypes.SWITCH:
+      return switchOperation(state, action);
     default:
       return state;
   }

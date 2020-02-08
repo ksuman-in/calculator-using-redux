@@ -1,5 +1,6 @@
 import React from "react";
-export default props => {
+
+const Screen = props => {
   return (
     <div className="calculator-screen">
       <p className="screen-top">{props.expression}</p>
@@ -7,3 +8,5 @@ export default props => {
     </div>
   );
 };
+
+export default Screen;

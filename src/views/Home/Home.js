@@ -1,37 +1,32 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import "./Home.scss";
-import Keyboard from "../../component/Keyboard";
+import ButtonGroup from "../../component/ButtonGroup";
 import Screen from "../../component/Screen";
 import {
   calculate,
   deleteLastEntry,
-  evaluateExpression
-} from "../../redux/actions/calculate";
-import * as fromCalculator from "../../redux";
+  evaluateExpression,
+  switchExpression
+} from "../../redux/actions/calculatorAction";
+import * as fromRedux from "../../redux";
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div className="calculator">
-        <Screen {...this.props} />
-        <div className="button-grp">
-          <Keyboard {...this.props} />
-        </div>
+const Home = props => {
+  const { expression, total } = props;
+  return (
+    <div className="calculator">
+      <Screen expression={expression} total={total} />
+      <div className="button-grp">
+        <ButtonGroup {...props} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const mapStateToProps = state => {
   return {
-    expression: fromCalculator.getExpression(state),
-    total: fromCalculator.getTotal(state)
+    expression: fromRedux.getExpression(state),
+    total: fromRedux.getTotal(state)
   };
 };
 
@@ -40,11 +35,14 @@ const mapDispatchToProps = dispatch => {
     calculate: value => {
       dispatch(calculate(value));
     },
-    delete: () => {
+    deleteLast: () => {
       dispatch(deleteLastEntry());
     },
     evaluate: () => {
       dispatch(evaluateExpression());
+    },
+    switchEvaluate: percent => {
+      dispatch(switchExpression(percent));
     }
   };
 };

@@ -1,8 +1,39 @@
+@import "./style/variables";
+
 .App {
   height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: linear-gradient(to bottom, #37474f, #455a64);
+  background: -webkit-linear-gradient(
+    bottom,
+    rgb(122, 150, 213) 0%,
+    rgb(97, 198, 242) 98%,
+    rgb(97, 198, 242) 100%
+  );
+  background: -o-linear-gradient(
+    bottom,
+    rgb(122, 150, 213) 0%,
+    rgb(97, 198, 242) 98%,
+    rgb(97, 198, 242) 100%
+  );
+  background: -ms-linear-gradient(
+    bottom,
+    rgb(122, 150, 213) 0%,
+    rgb(97, 198, 242) 98%,
+    rgb(97, 198, 242) 100%
+  );
+  background: -moz-linear-gradient(
+    bottom,
+    rgb(122, 150, 213) 0%,
+    rgb(97, 198, 242) 98%,
+    rgb(97, 198, 242) 100%
+  );
+  background: linear-gradient(
+    to top,
+    rgb(122, 150, 213) 0%,
+    rgb(97, 198, 242) 98%,
+    rgb(97, 198, 242) 100%
+  );
 }

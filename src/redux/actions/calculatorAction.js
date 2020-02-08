@@ -18,3 +18,10 @@ export const evaluateExpression = () => {
     type: actionTypes.EVALUATE
   };
 };
+
+export const switchExpression = switchType => {
+  return {
+    type: actionTypes.SWITCH,
+    switchType
+  };
+};
