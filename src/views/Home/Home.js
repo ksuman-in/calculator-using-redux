@@ -40,8 +40,8 @@ const mapDispatchToProps = dispatch => {
     evaluate: () => {
       dispatch(evaluateExpression());
     },
-    switchEvaluate: percent => {
-      dispatch(switchExpression(percent));
+    switchEvaluate: data => {
+      dispatch(switchExpression(data));
     }
   };
 };
