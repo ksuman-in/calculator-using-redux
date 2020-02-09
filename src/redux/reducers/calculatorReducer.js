@@ -4,7 +4,6 @@ import * as actionTypes from "../actionTypes";
 let initialState = {
   expression: "",
   total: 0,
-  value: "",
   switchSymbol: "-"
 };
 
@@ -14,14 +13,18 @@ const getValue = exp => {
   return match;
 };
 
-const numberFormat = num => {
-  const decimal = num.toFixed(2);
-  if (Number.isInteger(num))
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  else return decimal.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+const replaceString = str => {
+  const regExp = /(\d)(?=(\d{3})+(?!\d))/g;
+  return str.toString().replace(regExp, "$1,");
 };
 
-const checkExpression = exp => {
+const numberFormat = num => {
+  const decimal = num.toFixed(2);
+  if (Number.isInteger(num)) return replaceString(num);
+  else return replaceString(decimal);
+};
+
+const switchExpression = exp => {
   let matchChar = getValue(exp).input;
   const regex = new RegExp(/[^0-9]$/, "gm");
   const isMatch = regex.test(matchChar);
@@ -32,11 +35,11 @@ const checkExpression = exp => {
 };
 
 const calculateValue = expression => {
-  const tempMatch = getValue(expression);
-  if (!tempMatch) {
+  const value = getValue(expression);
+  if (!value) {
     return 0;
   }
-  return new Function(`return ${tempMatch[0]}`)();
+  return new Function(`return ${value[0]}`)();
 };
 
 const evaluateOperation = (state, action) => {
@@ -52,7 +55,7 @@ const evaluateOperation = (state, action) => {
     expTemp = expression + payload;
     let value = calculateValue(expTemp);
     tempTotal = numberFormat(value);
-    if (tempTotal.toString().length > 16) {
+    if (tempTotal.toString().replace(/,/g, "").length > 14) {
       tempTotal = 0;
       expTemp = "";
     }
@@ -65,7 +68,7 @@ const switchOperation = (state, action) => {
   const { switchType } = action;
   const { expression, switchSymbol } = state;
   let ssymbol = switchSymbol;
-  let expTemp = checkExpression(expression);
+  let expTemp = switchExpression(expression);
   const stype = switchType.split("/")[0];
   if (expTemp.length) {
     if (stype === ssymbol) {
@@ -93,13 +96,12 @@ const deleteLastElement = state => {
 };
 
 const evaluateResult = state => {
-  const { expression, total } = state;
-  let tempTotal = total;
-  tempTotal = calculateValue(expression) || expression || total;
-  return { ...state, expression: "", total: tempTotal };
+  const { total } = state;
+  let tempTotal = total.toString().replace(/,/g, "");
+  return { ...state, expression: tempTotal, total: 0 };
 };
 
-export default (state = initialState, action) => {
+const calculator = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.OPERATION:
       return evaluateOperation(state, action);
@@ -113,3 +115,5 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+export default calculator;

@@ -9,7 +9,6 @@ import {
   evaluateExpression,
   switchExpression
 } from "../../redux/actions/calculatorAction";
-import * as fromRedux from "../../redux";
 
 const Home = props => {
   const { expression, total } = props;
@@ -25,8 +24,8 @@ const Home = props => {
 
 const mapStateToProps = state => {
   return {
-    expression: fromRedux.getExpression(state),
-    total: fromRedux.getTotal(state)
+    expression: state.calculator.expression,
+    total: state.calculator.total
   };
 };
 
